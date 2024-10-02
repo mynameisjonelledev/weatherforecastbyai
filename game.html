@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast</title>
+  <link rel="icon" type="icon/x-image" href="https://cdn.icon-icons.com/icons2/1150/PNG/512/1486504834-cloud-clouds-cloudy-sky-cloud-computing-storage-weather_81351.png">
+
+  <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+input {
+    padding: 10px;
+    margin-top: 10px;
+    width: calc(100% - 22px);
+    border: 1px solid #00796b;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005f56;
+}
+
+#weather-info {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+  </style>
+
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Daily Weather Forecast</h1>
+      <input type="text" id="city-input" placeholder="Enter city name" />
+      <button id="get-weather">Get Weather</button>
+      <div id="weather-info"></div>
+  </div>
+   
+   <script>
+const apiKey = '9516d028268dc230db0074499d2ab575'; // Replace with your OpenWeatherMap API key
+const getWeatherButton = document.getElementById("get-weather");
+const cityInput = document.getElementById("city-input");
+const weatherInfo = document.getElementById("weather-info");
+
+getWeatherButton.addEventListener("click", () => {
+    const city = cityInput.value;
+    if (city) {
+        fetchWeather(city);
+    } else {
+        weatherInfo.textContent = "Please enter a city name.";
+    }
+});
+
+async function fetchWeather(city) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("City not found");
+        }
+        const data = await response.json();
+        displayWeather(data);
+    } catch (error) {
+        weatherInfo.textContent = error.message;
+    }
+}
+
+function displayWeather(data) {
+    const { main, weather, name } = data;
+    weatherInfo.innerHTML = `
+        <h2>${name}</h2>
+        <p>Temperature: ${main.temp} °C</p>
+        <p>Condition: ${weather[0].description}</p>
+    `;
+}
+
+    </script>
+  </body>
+
+  </html>
